@@ -1,10 +1,10 @@
 import React, {useState} from 'react'
 import New_button from './components/New_button'
 import TickerChart from './components/TickerChart'
-import UncontrolledBoard from './components/AllOnBoard'
+
 
 import './styles/App.css';
-
+import LocalStorageLayout from './components/Grid'
 
 
 function App() {
@@ -31,7 +31,7 @@ function App() {
 
            
          </div> 
-         <UncontrolledBoard />
+        <LocalStorageLayout/>
     </div>
   );
 }
