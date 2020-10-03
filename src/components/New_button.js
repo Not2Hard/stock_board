@@ -1,8 +1,7 @@
-import React, { useRef, useEffect } from "react";
+import React  from "react";
 import './styles/new_button.scss'
 
 
-import { Button } from 'react-bulma-components/dist';
 
 
 const New_button = () => {

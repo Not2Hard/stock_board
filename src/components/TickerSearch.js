@@ -14,7 +14,7 @@ import { Form } from 'react-bulma-components';
 // import Icon from 'react-bulma-components/lib/components/icon'
 
 import { debounce }      from '../utils'
-import { searchTickers, getDetailes } from '../api'
+import { searchTickers } from '../api'
 
 class TickerPopupItem extends React.Component {
   static propTypes = {

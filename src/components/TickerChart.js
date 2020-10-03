@@ -1,8 +1,7 @@
 import './styles/ticker-chart.scss'
 
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useState } from "react";
 import ReactResizeDetector from 'react-resize-detector';
-import Axios from "axios";
 import classnames from "classnames"
 import PolygonAdapter from '@polygon.io/tradingview-adapter'
 import TradingViewWidget from 'react-tradingview-widget'
@@ -19,7 +18,7 @@ const TickerChart = (props) => {
   const chartRef = useRef(null);
   const chartContainerRef = useRef(null)
   const [chartWidth, setChartWidth] = useState(0)
-  const ticker = 'NVDA'
+  const ticker = props.ticker.ticker
   console.log('ticker for chart', ticker)
 
   if (!ticker) return null
