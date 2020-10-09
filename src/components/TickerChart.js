@@ -2,6 +2,7 @@ import './styles/ticker-chart.scss'
 
 import React, { useRef, useState } from "react";
 import ReactResizeDetector from 'react-resize-detector';
+
 import classnames from "classnames"
 import PolygonAdapter from '@polygon.io/tradingview-adapter'
 import TradingViewWidget from 'react-tradingview-widget'
@@ -29,11 +30,11 @@ const TickerChart = (props) => {
       }
   }
 
-  const className = classnames("ticker-chart box", { visible: ticker })
+  const className = classnames({ visible: ticker })
   
   return (    
     <div className={className}>
-      <ReactResizeDetector handleWidth handleHeight onResize={onChartResize}>
+      <ReactResizeDetector handleWidth handleHeight onResize={onChartResize} width='inherit'>
         <div className="ticker-chart-container" ref={chartContainerRef}>
           <div className="ticker-chart" ref={chartRef}><TradingViewWidget
           symbol={ticker}
@@ -50,8 +51,9 @@ const TickerChart = (props) => {
           user_id="public_user_id"
           theme="Light" /* Light or Dark */
           // width={chartWidth}
-          width="600"
-          height="330"
+          // width="600"
+          autosize= "true"
+          // height="330"
           style="3"
           toolbar_bg= "#f1f3f6"
           enable_publishing='false'

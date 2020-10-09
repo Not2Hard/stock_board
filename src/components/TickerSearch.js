@@ -208,8 +208,10 @@ export default class TickerSearch extends React.Component {
     }
 
     if (event.keyCode === 13) {
-      const selectedTicker = this.refs.tickerPopup.getSelectedTicker()
+      const selectedTicker = this.refs.tickerPopup.getSelectedTicker()      
       const value = selectedTicker ? selectedTicker.ticker : ''
+
+      console.log('...enter is pressed, selectedTicker', )
 
       this.setState({ value, tickers: [] }, () => {
         this.props.onValueChange(selectedTicker)
@@ -225,9 +227,7 @@ export default class TickerSearch extends React.Component {
 
   handleTickerSelected = (ticker) => {
     this.setState({ tickers: [], value: ticker.ticker }, () => {
-      this.props.onValueChange(ticker)
-      
-     
+      this.props.onValueChange(ticker)           
     })
   }
 
