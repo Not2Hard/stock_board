@@ -39,7 +39,7 @@ function App() {
       <div className='card_container'>
         <div className="columns is-mobile">
             <div className="column is-two-thirds">
-              <TickerChart ticker={ticker}/>
+              {/* <TickerChart ticker={ticker}/> */}
               
             </div>
         </div>
