@@ -9,7 +9,7 @@ import TradingViewWidget from 'react-tradingview-widget'
 
 
 
-let chart
+// let chart
 const client = new PolygonAdapter({
   apikey: '54HOyGGFrBpAEB3oMFoGVzk3_C_hQGOrxTeQOl',
   realtimeEnabled: true // True(default) = Use websockets for updates. False = use polling for new data.
@@ -20,7 +20,6 @@ const TickerChart = (props) => {
   const chartContainerRef = useRef(null)
   const [chartWidth, setChartWidth] = useState(0)
   const ticker = props.ticker.ticker
-  console.log('ticker for chart', ticker)
 
   if (!ticker) return null
 
@@ -50,7 +49,7 @@ const TickerChart = (props) => {
           client_id="tradingview.com"
           user_id="public_user_id"
           theme="Light" /* Light or Dark */
-          // width={chartWidth}
+          width={chartWidth}
           // width="600"
           autosize= "true"
           // height="330"

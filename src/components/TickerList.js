@@ -1,71 +1,122 @@
 
-import React,{ createElement, useState } from 'react'
+import React,{ useState } from 'react'
 import TickerChart from './TickerChart'
-import uuid from 'uuid';
 
 
-// import '../../node_modules/react-grid-layout/css/styles.css'
-// import '../../node_modules/react-resizable/css/styles.css'
+
 // import '../components/grid_elem/resizable-styles.css'
 import '../components/grid_elem/grid_styles.css'
 import '../components/grid_elem/example-styles.css'
 
 import { WidthProvider, Responsive } from "react-grid-layout";
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
+
 const uuidv4 = require("uuid/v4")
 
 
+
 const TickerList = (props) => {
-    const [items, changeItems] = useState([])
-    const [counter, changeCounter] = useState(0)
     const [cols, changeCols] = useState(3)
-
-
-
-    const ticker = props.ticker
+    const [layouts, changeLayouts] = useState(JSON.parse(JSON.stringify(getFromLS("layout") || [])))
+    
     const tickers = props.tickerList
-    const allTickers = Array.from(tickers)
+
+    React.useEffect(() => {
+      console.log("saving ticker", tickers)
+      saveToLS("tickerlist", tickers)
+    }, [props.tickerList])
+
+    // const originalLayout = getFromLS("layout") || [];
+
+ 
+   
+    // const allTickers = Array.from(tickers)
     console.log('array of stocks', tickers)
 
-    const layouts = {}
-    const createElement = (el) => {
+    const createElement = (tickers) => {
         return(
-            <div key={el.i} data-grid={{x: el.x, y: el.y, w: 4, h: 10}}>
-                <TickerChart ticker= {el.ticker}/>
-            </div>
+            tickers.map(ticker => {
+                const i = uuidv4()
+                const removeCallback = () => props.onRemove(ticker.ticker) //onRemoveItem(i)
+
+                const removeStyle = {
+                    position: "absolute",
+                    right: "2px",
+                    top: 0,
+                    cursor: "pointer"
+                  };
+                return(
+                    <div key={i} data-grid={
+                            {
+                            i: i,
+                            x: (tickers.length * 2) % (cols || 12), 
+                            y: Infinity, // puts it at the bottom 
+                            w: 2, 
+                            h: 10
+                            }}>
+                        <TickerChart ticker= {ticker}/>
+                        <span 
+                            className="remove"
+                            style={removeStyle}
+                            onClick={removeCallback}
+                            >
+                            x
+                        </span>
+                    </div>
+                )
+                
+            })
 
         )
     }
-    const onAddStock = () => {
-        changeItems(items.concat({
-            i: uuidv4(),
-            x: (items.length * 2) % (cols || 12),
-            y: Infinity, // puts it at the bottom
-            w: 2,
-            h: 10,
-            ticker: ticker
+ 
+
+    const onLayoutChange = (layout) => {
+        /*eslint no-console: 0*/
+        saveToLS("layout", layout);
+        changeLayouts({ layout });
+        // this.props.onLayoutChange(layout); // updates status display
+      }
+
+      function getFromLS(key) {
+        let ls = {};
+        if (global.localStorage) {
+          try {
+            ls = JSON.parse(localStorage.getItem("stock-board")) || {};
+          } catch (e) {
+            /*Ignore*/
+          }
+        }
+        return ls[key];
+      }
+      
+      
+  const saveToLS = (key, value) => {
+    if (global.localStorage) {
+      global.localStorage.setItem(
+        "stock-board",
+        JSON.stringify({
+          [key]: value
         })
-        )
-        changeCounter(counter + 1)
-        console.log('add is clicked')
+      );
     }
+  }
 
 
     return (
         <div>
-            <p>ABC</p>
-            <button onClick={onAddStock}>Add Item</button>
             <div className="grid-container">
             {
                  <ResponsiveReactGridLayout className="layout" layouts={layouts} rowHeight={30}
                      breakpoints={{lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0}}
-                     cols={{lg: 12, md: 10, sm: 6, xs: 4, xxs: 2}}>
-                        {items.map(el => createElement(el))}
+                     cols={{lg: 6, md: 4, sm: 2, xs: 1, xxs: 1}}>
+                        {createElement(tickers)}
                 </ResponsiveReactGridLayout>
             }
             </div>
-            
         </div>
     )
+
+    
 }
 export default TickerList
