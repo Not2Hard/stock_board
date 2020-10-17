@@ -30,29 +30,32 @@ const TickerList = (props) => {
 
   
     const createElement = () => {
-      return props.layout.layout.map(({ i, x, y, w, h, moved }) => {
-        const removeCallback = () => props.onRemove(i) 
-        const removeStyle = {
-            position: "absolute",
-            right: "2px",
-            top: 0,
-            cursor: "pointer"
-          };
+        return (
+          props.layout.map(({ i, x, y, w, h }) => {
+          const removeCallback = () => props.onRemove(i) 
+          const removeStyle = {
+              position: "absolute",
+              right: "2px",
+              top: 0,
+              cursor: "pointer"
+            };
+  
+          return(
+              <div key={i} data-grid={{ i, x, y, w, h }}>
+                  <TickerChart ticker= {i}/>
+                  <span 
+                      className="remove"
+                      style={removeStyle}
+                      onClick={removeCallback}
+                      >
+                      x
+                  </span>
+              </div>
+          )
+          
+        }))
 
-        return(
-            <div key={i} data-grid={{ i, x, y, w, h }}>
-                <TickerChart ticker= {i}/>
-                <span 
-                    className="remove"
-                    style={removeStyle}
-                    onClick={removeCallback}
-                    >
-                    x
-                </span>
-            </div>
-        )
-        
-      })
+      
     }
 
       function getFromLS(key) {

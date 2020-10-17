@@ -13,10 +13,19 @@ export function searchTickers(searchString) {
     })
 }
 
-export function  getDetailes(symbol) {
+const symbolDetailsCache = {}
+
+export async function  getDetailes(symbol) {
+    if (!symbolDetailsCache[symbol]) {
+        symbolDetailsCache[symbol] = await loadDetailes(symbol)
+    }
+    return symbolDetailsCache[symbol]
+}
+
+export function  loadDetailes(symbol) {
     return new Promise((resolve, reject) => {
         if (symbol) {
-                Axios.get(`${BASE_URL}/v1/meta/symbols/${symbol}/company?apiKey=${API_KEY}`).then((res) => {
+            Axios.get(`${BASE_URL}/v1/meta/symbols/${symbol}/company?apiKey=${API_KEY}`).then((res) => {
                 resolve(res.data)
             }).catch((error) => {
                 console.log(error.message || error)
@@ -38,7 +47,19 @@ export function  getDetailes(symbol) {
      })
  }
 
- export function getChart(symbol) {
+ const chartCache = {}
+
+ export async function getChart(symbol) {
+     if (!chartCache[symbol]) {
+        chartCache[symbol] = await loadChart(symbol)
+        console.log(`put ${symbol} data from cache...`)
+     } else {
+         console.log(`get ${symbol} data from cache...`)
+     }
+     return chartCache[symbol]
+ }
+
+ export function loadChart(symbol) {
     return new Promise((resolve, reject) => {
         if (symbol) {
            Axios.get(`${BASE_URL}/v1/meta/symbols/${symbol}/news?apiKey=${API_KEY}`).then((res) => {

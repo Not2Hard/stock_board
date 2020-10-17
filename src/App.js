@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 import TickerSearch from './components/TickerSearch'
 import TickerList from './components/TickerList'
-import { loadLayout, saveLayout, addTicker2Layout } from './components/layoutHandler'
+import { loadLayout, saveLayout, addTicker2Layout, removeTIckerFromLayout } from './components/layoutHandler'
 
 
 import './styles/App.css';
@@ -24,24 +24,16 @@ const lsTiskers = getFromLS("tickerlist")
 
 function App() {
   const [ticker,changeTicker] = useState({})  
-  const [tickerList, changeTickerList] = useState(lsTiskers)
+  const [tickerList, changeTickerList] = useState("")
   const [layout, changeLayout] = useState(loadLayout())
 
-  const handleTickerChanged = (ticker) => {
-    const tickerSymbol = ticker.ticker
-    addTicker2Layout(tickerSymbol, layout)
-    changeTickerList([...tickerList, {ticker:tickerSymbol}])
-    changeTicker({ticker:tickerSymbol})
-    console.log('newtickerlist', tickerList)
+  const handleTickerChanged = (ticker) => {    
+    changeLayout(addTicker2Layout(ticker, layout))
   }
 
   const handleRemove = (ticker) => {
-    // console.log(`Ticker removed: ${ticker}`)
-    const newTickerlist = tickerList.filter(elem => elem.ticker !== ticker)
-    changeTickerList(newTickerlist)
+    changeLayout(removeTIckerFromLayout(ticker, layout))
   }
-
- 
 
   return (
     <div className="App">
