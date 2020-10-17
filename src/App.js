@@ -1,18 +1,10 @@
 import React, {useState} from 'react'
 import TickerSearch from './components/TickerSearch'
 import TickerList from './components/TickerList'
+import { loadLayout, saveLayout, addTicker2Layout } from './components/layoutHandler'
 
 
 import './styles/App.css';
-
-
-
-// import './components/grid_elem/grid_styles.css'
-// import './components/grid_elem/example-styles.css'
-// import '../node_modules/react-grid-layout/css/styles.css'
-// import '../node_modules/react-resizable/css/styles.css'
-// import GridLayout from 'react-grid-layout';
-// import Grid from './components/Grid'
 
 const getFromLS = (key) => {
   let ls = {};
@@ -25,35 +17,22 @@ const getFromLS = (key) => {
   }
   return ls[key];
 }
-const getLayotFromLS = (key) => {
-  let ls = {};
-  if (global.localStorage) {
-    try {
-      ls = JSON.parse(global.localStorage.getItem("board-layout")) || {};
-    } catch (e) {
-      /*Ignore*/
-    }
-  }
-  return ls[key];
-}
-
 const lsTiskers = getFromLS("tickerlist")
-console.log("localstorige", lsTiskers)
+// console.log("localstorige", lsTiskers)
 
-const originalLayout = getLayotFromLS("layout") || []
 
 
 function App() {
   const [ticker,changeTicker] = useState({})  
   const [tickerList, changeTickerList] = useState(lsTiskers)
-  console.log("originalLayout", originalLayout)
+  const [layout, changeLayout] = useState(loadLayout())
 
   const handleTickerChanged = (ticker) => {
     const tickerSymbol = ticker.ticker
+    addTicker2Layout(tickerSymbol, layout)
     changeTickerList([...tickerList, {ticker:tickerSymbol}])
     changeTicker({ticker:tickerSymbol})
     console.log('newtickerlist', tickerList)
-    
   }
 
   const handleRemove = (ticker) => {
@@ -62,28 +41,12 @@ function App() {
     changeTickerList(newTickerlist)
   }
 
-  const handleLayoutChange = (layout) => {
-    /*eslint no-console: 0*/
-    if (global.localStorage) {
-      global.localStorage.setItem(
-        "board-layout",
-        JSON.stringify({
-          "layout": layout
-        })
-      );
-    }
-    
-    // changeLayouts(layout);
-    // this.props.onLayoutChange(layout); // updates status display
-    console.log("saving lauout", layout)
- 
-  }
  
 
   return (
     <div className="App">
       <TickerSearch onValueChange={handleTickerChanged} />
-      <TickerList ticker={ticker} tickerList={tickerList} onRemove={handleRemove} originalLayout={originalLayout} onLayoutChange={handleLayoutChange}/>
+      <TickerList ticker={ticker} tickerList={tickerList} onRemove={handleRemove} layout={layout} onLayoutChange={saveLayout}/>
       <div className='card_container'>
         <div className="columns is-mobile">
             <div className="column is-two-thirds">

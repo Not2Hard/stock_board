@@ -19,7 +19,7 @@ const TickerChart = (props) => {
   const chartRef = useRef(null);
   const chartContainerRef = useRef(null)
   const [chartWidth, setChartWidth] = useState(0)
-  const ticker = props.ticker.ticker
+  const ticker = props.ticker
 
   if (!ticker) return null
 
