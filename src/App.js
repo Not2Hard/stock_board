@@ -25,18 +25,30 @@ const getFromLS = (key) => {
   }
   return ls[key];
 }
+const getLayotFromLS = (key) => {
+  let ls = {};
+  if (global.localStorage) {
+    try {
+      ls = JSON.parse(global.localStorage.getItem("board-layout")) || {};
+    } catch (e) {
+      /*Ignore*/
+    }
+  }
+  return ls[key];
+}
 
-const LStiskers = JSON.parse(JSON.stringify(getFromLS("tickerlist")))
-console.log("localstorige", LStiskers)
+const lsTiskers = getFromLS("tickerlist")
+console.log("localstorige", lsTiskers)
+
+const originalLayout = getLayotFromLS("layout") || []
 
 
 function App() {
   const [ticker,changeTicker] = useState({})  
-  const [tickerList, changeTickerList] = useState(LStiskers)
- 
+  const [tickerList, changeTickerList] = useState(lsTiskers)
+  console.log("originalLayout", originalLayout)
 
   const handleTickerChanged = (ticker) => {
-    
     const tickerSymbol = ticker.ticker
     changeTickerList([...tickerList, {ticker:tickerSymbol}])
     changeTicker({ticker:tickerSymbol})
@@ -50,12 +62,28 @@ function App() {
     changeTickerList(newTickerlist)
   }
 
+  const handleLayoutChange = (layout) => {
+    /*eslint no-console: 0*/
+    if (global.localStorage) {
+      global.localStorage.setItem(
+        "board-layout",
+        JSON.stringify({
+          "layout": layout
+        })
+      );
+    }
+    
+    // changeLayouts(layout);
+    // this.props.onLayoutChange(layout); // updates status display
+    console.log("saving lauout", layout)
+ 
+  }
  
 
   return (
     <div className="App">
       <TickerSearch onValueChange={handleTickerChanged} />
-      <TickerList ticker={ticker} tickerList={tickerList} onRemove={handleRemove} />
+      <TickerList ticker={ticker} tickerList={tickerList} onRemove={handleRemove} originalLayout={originalLayout} onLayoutChange={handleLayoutChange}/>
       <div className='card_container'>
         <div className="columns is-mobile">
             <div className="column is-two-thirds">

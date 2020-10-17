@@ -1,6 +1,7 @@
 
-import React,{ useState } from 'react'
+import React,{ useState, useEffect} from 'react'
 import TickerChart from './TickerChart'
+import RGL, { WidthProvider,Responsive } from "react-grid-layout";
 
 
 
@@ -8,31 +9,31 @@ import TickerChart from './TickerChart'
 import '../components/grid_elem/grid_styles.css'
 import '../components/grid_elem/example-styles.css'
 
-import { WidthProvider, Responsive } from "react-grid-layout";
-const ResponsiveReactGridLayout = WidthProvider(Responsive);
+const ResponsiveReactGridLayout = WidthProvider(Responsive)
 
 const uuidv4 = require("uuid/v4")
 
+const ReactGridLayout = WidthProvider(RGL)
 
 
 const TickerList = (props) => {
     const [cols, changeCols] = useState(3)
-    const [layouts, changeLayouts] = useState(JSON.parse(JSON.stringify(getFromLS("layout") || [])))
+    const [layouts, changeLayouts] = useState(props.originalLayout)
     
-    const tickers = props.tickerList
+    const tickers = props.tickerList || []
 
-    React.useEffect(() => {
+    useEffect(() => {
       console.log("saving ticker", tickers)
       saveToLS("tickerlist", tickers)
     }, [props.tickerList])
 
-    // const originalLayout = getFromLS("layout") || [];
+    useEffect(() => {
+      console.log("layoutr", layouts)
+      
+    }, [layouts])
 
- 
+
    
-    // const allTickers = Array.from(tickers)
-    console.log('array of stocks', tickers)
-
     const createElement = (tickers) => {
         return(
             tickers.map(ticker => {
@@ -73,9 +74,19 @@ const TickerList = (props) => {
 
     const onLayoutChange = (layout) => {
         /*eslint no-console: 0*/
-        saveToLS("layout", layout);
-        changeLayouts({ layout });
+        if (global.localStorage) {
+          global.localStorage.setItem(
+            "board-layout",
+            JSON.stringify({
+              "layout": layout
+            })
+          );
+        }
+        
+        // changeLayouts(layout);
         // this.props.onLayoutChange(layout); // updates status display
+        console.log("saving lauout", layout)
+     
       }
 
       function getFromLS(key) {
@@ -107,9 +118,13 @@ const TickerList = (props) => {
         <div>
             <div className="grid-container">
             {
-                 <ResponsiveReactGridLayout className="layout" layouts={layouts} rowHeight={30}
-                     breakpoints={{lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0}}
-                     cols={{lg: 6, md: 4, sm: 2, xs: 1, xxs: 1}}>
+                 <ResponsiveReactGridLayout 
+                  className="layout" 
+                  layouts={layouts} 
+                  onLayoutChange={onLayoutChange}
+                  rowHeight={30}
+                  breakpoints={{lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0}}
+                  cols={{lg: 6, md: 4, sm: 2, xs: 1, xxs: 1}}>
                         {createElement(tickers)}
                 </ResponsiveReactGridLayout>
             }
