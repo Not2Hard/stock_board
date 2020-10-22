@@ -8,6 +8,7 @@ import RGL, { WidthProvider,Responsive } from "react-grid-layout";
 // import '../components/grid_elem/resizable-styles.css'
 import '../components/grid_elem/grid_styles.css'
 import '../components/grid_elem/example-styles.css'
+import '../components/grid_elem/grid.scss'
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive)
 
@@ -35,21 +36,25 @@ const TickerList = (props) => {
           const removeCallback = () => props.onRemove(i) 
           const removeStyle = {
               position: "absolute",
-              right: "2px",
+              right: "0",
               top: 0,
-              cursor: "pointer"
+              cursor: "pointer",
             };
   
           return(
               <div key={i} data-grid={{ i, x, y, w, h }}>
+                 <span className="dragme">
+                    <p>..........<br/>..........</p>
+                  </span>
                   <TickerChart ticker= {i}/>
                   <span 
                       className="remove"
                       style={removeStyle}
                       onClick={removeCallback}
                       >
-                      x
+                      &#215;
                   </span>
+                 
               </div>
           )
           
