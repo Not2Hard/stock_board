@@ -186,6 +186,7 @@ export default class TickerSearch extends React.Component {
         this.fetchTickersDebounce()
       } else {
         this.setState({ tickers: [] })
+        this.setState({value: ''})
       }
     })
   }

@@ -53,7 +53,7 @@ const TickerChart = (props) => {
           // width="600"
           autosize={true}
           // height="330"
-          style={3}
+          style="3"
           toolbar_bg= "#f1f3f6"
           enable_publishing={false}
           hide_top_toolbar={true}

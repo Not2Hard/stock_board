@@ -13,6 +13,7 @@ function App() {
   const handleTickerChanged = (ticker) => {    
     let savedTickers = layout.map(item => {return item.i})
     savedTickers.includes(ticker.ticker) ? alert(`"${ticker.ticker}" - ${ticker.name} - is alredy on your board `) : changeLayout(addTicker2Layout(ticker, layout))
+    
   }
 
   const handleRemove = (ticker) => {
