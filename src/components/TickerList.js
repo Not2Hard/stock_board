@@ -1,34 +1,18 @@
 
-import React,{ useState, useEffect} from 'react'
+import React,{ useState } from 'react'
 import TickerChart from './TickerChart'
-import RGL, { WidthProvider,Responsive } from "react-grid-layout";
+import { WidthProvider,Responsive } from "react-grid-layout";
 
 
-
-// import '../components/grid_elem/resizable-styles.css'
 import '../components/grid_elem/grid_styles.css'
 import '../components/grid_elem/example-styles.css'
 import '../components/grid_elem/grid.scss'
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive)
 
-const uuidv4 = require("uuid/v4")
-
-const ReactGridLayout = WidthProvider(RGL)
-
-
 
 const TickerList = (props) => {
-    const [cols, changeCols] = useState(3)
     const [layouts] = useState(props.layout)
-    console.log ("state of layauts", layouts)
-    const tickers = props.tickerList || []    
-
-    useEffect(() => {
-      console.log("saving ticker", tickers)
-      saveToLS("tickerlist", tickers)
-    }, [props.tickerList])
-
   
     const createElement = () => {
         return (
@@ -62,31 +46,6 @@ const TickerList = (props) => {
 
       
     }
-
-      function getFromLS(key) {
-        let ls = {};
-        if (global.localStorage) {
-          try {
-            ls = JSON.parse(localStorage.getItem("stock-board")) || {};
-          } catch (e) {
-            /*Ignore*/
-          }
-        }
-        return ls[key];
-      }
-      
-      
-  const saveToLS = (key, value) => {
-    if (global.localStorage) {
-      global.localStorage.setItem(
-        "stock-board",
-        JSON.stringify({
-          [key]: value
-        })
-      );
-    }
-  }
-
 
     return (
         <div>
