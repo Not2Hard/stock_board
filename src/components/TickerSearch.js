@@ -70,7 +70,7 @@ class TickerPopup extends React.Component {
       this.setState({ selectedIndex: -1 })
     }
     if (props.tickers !== this.props.tickers) {
-      this.tickerRefs = props.tickers.map((ticker, index) => {
+      this.tickerRefs = props.tickers.map(() => {
         return React.createRef()
       })
     }
@@ -88,7 +88,7 @@ class TickerPopup extends React.Component {
     })
   }
 
-  scrollToIndex = ({ index }) => {
+  scrollToIndex = (index) => {
     const ref = this.tickerRefs[index]
 
     if (ref && ref.current) {
@@ -106,7 +106,7 @@ class TickerPopup extends React.Component {
       ? 0
       : this.state.selectedIndex + 1
     this.setState({ selectedIndex }, () => {
-      this.scrollToIndex({ index: selectedIndex, up: false })
+      this.scrollToIndex(selectedIndex)
     })
   }
 
@@ -115,7 +115,7 @@ class TickerPopup extends React.Component {
       ? this.props.tickers.length - 1
       : this.state.selectedIndex - 1
     this.setState({ selectedIndex }, () => {
-      this.scrollToIndex({ index: selectedIndex, up: true })
+      this.scrollToIndex(selectedIndex)
     })
   }
 
@@ -162,6 +162,7 @@ export default class TickerSearch extends React.Component {
   constructor(props) {
     super(props)
     this.fetchTickersDebounce = debounce(this.fetchTickers, 250, false)
+    this.tickerPopup = React.createRef()
   }
 
   fetchTickers = () => {
@@ -186,7 +187,6 @@ export default class TickerSearch extends React.Component {
         this.fetchTickersDebounce()
       } else {
         this.setState({ tickers: [] })
-        this.setState({value: ''})
       }
     })
   }
@@ -209,7 +209,8 @@ export default class TickerSearch extends React.Component {
     }
 
     if (event.keyCode === 13) {
-      const selectedTicker = this.refs.tickerPopup.getSelectedTicker()      
+      // const selectedTicker = this.refs.tickerPopup.getSelectedTicker()      
+      const selectedTicker = this.tickerPopup.current.getSelectedTicker()
       const value = selectedTicker ? selectedTicker.ticker : ''
 
       console.log('...enter is pressed, selectedTicker', )
@@ -219,16 +220,18 @@ export default class TickerSearch extends React.Component {
       })
     } else if (event.keyCode === 40) {
       event.preventDefault()
-      this.refs.tickerPopup.handleKeyDown()
+      this.tickerPopup.current.handleKeyDown()
+      // this.refs.tickerPopup.handleKeyDown()
     } else if (event.keyCode === 38) {
       event.preventDefault()
-      this.refs.tickerPopup.handleKeyUp()
+      // this.refs.tickerPopup.handleKeyUp()
+      this.tickerPopup.current.handleKeyUp()
     }
   }
 
   handleTickerSelected = (ticker) => {
-    this.setState({ tickers: [], value: ticker.ticker }, () => {
-      this.props.onValueChange(ticker)           
+    this.setState({ tickers: [], value:'' /*ticker.ticker*/ }, () => {
+      this.props.onValueChange(ticker)   
     })
   }
 
@@ -265,7 +268,7 @@ export default class TickerSearch extends React.Component {
               </div>
               
               <TickerPopup
-                ref="tickerPopup"
+                ref={this.tickerPopup}
                 visible={!!value}
                 tickers={tickers}
                 onClick={this.handleTickerSelected}

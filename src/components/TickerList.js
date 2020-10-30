@@ -12,7 +12,7 @@ const ResponsiveReactGridLayout = WidthProvider(Responsive)
 
 
 const TickerList = (props) => {
-    const [layouts] = useState(props.layout)
+    const layouts = {} //useState(props.layout) TODO: WTF???
   
     const createElement = () => {
         return (
